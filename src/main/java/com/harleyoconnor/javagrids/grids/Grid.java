@@ -1,7 +1,6 @@
 package com.harleyoconnor.javagrids.grids;
 
 import com.harleyoconnor.javagrids.utils.ArrayUtils;
-import com.harleyoconnor.javagrids.utils.InputUtils;
 import javafx.util.Pair;
 
 import javax.annotation.Nullable;
@@ -71,7 +70,7 @@ public class Grid {
      * @return A pair of integers, the key is the row index and the value is the column index, or null if the element ID was invalid.
      */
     @Nullable
-    public Pair<Integer, Integer> getElement (final String elementId) {
+    public Pair<Integer, Integer> getElementPosition (final String elementId) {
         final StringBuilder rowBuilder = new StringBuilder();
         final StringBuilder columnBuilder = new StringBuilder();
         final AtomicBoolean intReached = new AtomicBoolean(false);
@@ -108,6 +107,21 @@ public class Grid {
     }
 
     /**
+     * Gets the string value of an element from a readable element ID string in the form of A1.
+     *
+     * @param elementId The ID of the element, for example, A1 for the first one.
+     * @return The string at that element or null if the element ID was invalid.
+     */
+    @Nullable
+    public String getElementAt (final String elementId) {
+        final Pair<Integer, Integer> elementPosition = getElementPosition(elementId);
+
+        if (elementPosition == null) return null;
+
+        return this.grid.get(elementPosition.getKey()).get(elementPosition.getValue());
+    }
+
+    /**
      * Changes an element in the grid from a readable element ID string in the form of A1.
      *
      * @param elementId The ID of the element, for example, A1 for the first one.
@@ -115,16 +129,31 @@ public class Grid {
      * @return Boolean value of whether or not the operation was successful.
      */
     public boolean changeElement (final String elementId, final String newValue) {
-        final Pair<Integer, Integer> indexPair = getElement(elementId);
+        final Pair<Integer, Integer> indexPair = getElementPosition(elementId);
 
         if (indexPair == null) return false;
 
-        this.grid.get(indexPair.getKey()).set(indexPair.getValue(), " " + newValue + " ");
+        this.changeElement(indexPair, newValue);
         return true;
+    }
+
+
+    /**
+     * Changes an element in the grid from its position.
+     *
+     * @param position The position of the element, with the row index being the key and the column being the value.
+     * @param newValue The new value to set.
+     */
+    public void changeElement (final Pair<Integer, Integer> position, final String newValue) {
+        this.grid.get(position.getKey()).set(position.getValue(), newValue);
     }
 
     private void invalidElement () {
         System.out.println("The element you entered was invalid. Make sure it exists and is in the correct format.");
+    }
+
+    public List<List<String>> getGrid() {
+        return this.grid;
     }
 
 }
