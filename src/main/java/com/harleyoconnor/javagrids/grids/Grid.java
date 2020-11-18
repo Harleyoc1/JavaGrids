@@ -1,6 +1,6 @@
 package com.harleyoconnor.javagrids.grids;
 
-import com.harleyoconnor.javagrids.utils.ArrayUtils;
+import com.harleyoconnor.javautilities.ArrayUtils;
 import javafx.util.Pair;
 
 import javax.annotation.Nullable;

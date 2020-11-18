@@ -1,8 +1,8 @@
 package com.harleyoconnor.javagrids.games;
 
 import com.harleyoconnor.javagrids.grids.Grid;
-import com.harleyoconnor.javagrids.utils.InputUtils;
-import com.harleyoconnor.javagrids.utils.IntegerUtils;
+import com.harleyoconnor.javautilities.InputUtils;
+import com.harleyoconnor.javautilities.IntegerUtils;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -85,7 +85,7 @@ public final class GuessingGame {
             Pair<Integer, Integer> guessPosition;
 
             do {
-                guessPositionString = InputUtils.getInput("\nGuess a position (for example, A1 would be the first position). ", true).toUpperCase();
+                guessPositionString = InputUtils.getInput("\nGuess a position (for example, A1 would be the first position). ").toUpperCase();
                 guessPosition = this.gameGrid.getElementPosition(guessPositionString);
             } while (guessPosition == null);
 
