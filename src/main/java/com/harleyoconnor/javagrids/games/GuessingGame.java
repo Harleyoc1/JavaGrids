@@ -1,6 +1,7 @@
 package com.harleyoconnor.javagrids.games;
 
 import com.harleyoconnor.javagrids.grids.Grid;
+import com.harleyoconnor.javagrids.grids.GridElement;
 import com.harleyoconnor.javautilities.InputUtils;
 import com.harleyoconnor.javautilities.IntegerUtils;
 import javafx.util.Pair;
@@ -40,7 +41,7 @@ public final class GuessingGame {
     private int points = 0;
 
     public GuessingGame (final int difficulty, final int guesses) {
-        this.gameGrid = new Grid(difficulty, difficulty, "?");
+        this.gameGrid = new Grid(difficulty, difficulty, new GridElement("?"));
         this.guesses = guesses;
         this.difficulty = difficulty;
 
@@ -91,7 +92,7 @@ public final class GuessingGame {
 
             if (!this.pointsMap.containsKey(guessPosition)) {
                 System.out.println("No points found at this position.");
-                this.gameGrid.changeElement(guessPosition, " _ ");
+                this.gameGrid.getElementAt(guessPosition).setDisplayText(" _ ");
                 continue;
             }
 
@@ -100,7 +101,7 @@ public final class GuessingGame {
 
             System.out.println("You found " + points + " " + this.getPointsString(points) + " at this position, making your total " + this.points + " " + this.getPointsString(this.points) + ".\n");
 
-            this.gameGrid.changeElement(guessPosition, (points.toString().length() > 2 ? "" : " ") + points.toString() + (points.toString().length() > 1 ? "" : " "));
+            this.gameGrid.getElementAt(guessPosition).setDisplayText((points.toString().length() > 2 ? "" : " ") + points.toString() + (points.toString().length() > 1 ? "" : " "));
         }
 
         this.gameGrid.printGrid();

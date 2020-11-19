@@ -15,11 +15,11 @@ public class Grid {
 
     private final int rows;
     private final int columns;
-    private final String defaultElement;
+    private final GridElement defaultElement;
 
-    private final List<List<String>> grid = new ArrayList<>();
+    private final List<List<GridElement>> grid = new ArrayList<>();
 
-    public Grid (final int rows, final int columns, final String defaultElement) {
+    public Grid (final int rows, final int columns, final GridElement defaultElement) {
         this.rows = rows;
         this.columns = columns;
         this.defaultElement = defaultElement;
@@ -34,8 +34,13 @@ public class Grid {
         for (int i = 0; i < this.rows; i++) {
             this.grid.add(new ArrayList<>());
 
-            for (int j = 0; j < this.columns; j++)
-                this.grid.get(i).add(" " + this.defaultElement + " ");
+            for (int j = 0; j < this.columns; j++) {
+                final GridElement gridElement = this.defaultElement.clone();
+                gridElement.setGrid(this);
+                gridElement.setPosition(new Pair<>(i, j));
+
+                this.grid.get(i).add(gridElement);
+            }
         }
     }
 
@@ -54,9 +59,9 @@ public class Grid {
 
         Character currentLetter = 'A';
 
-        for (List<String> list : this.grid) {
+        for (List<GridElement> list : this.grid) {
             System.out.print(currentLetter);
-            list.forEach(System.out::print);
+            list.forEach(gridElement -> System.out.print(gridElement.getDisplayText()));
             System.out.println();
 
             currentLetter++;
@@ -110,30 +115,38 @@ public class Grid {
      * Gets the string value of an element from a readable element ID string in the form of A1.
      *
      * @param elementId The ID of the element, for example, A1 for the first one.
-     * @return The string at that element or null if the element ID was invalid.
+     * @return The grid element or null if the element ID was invalid.
      */
     @Nullable
-    public String getElementAt (final String elementId) {
-        final Pair<Integer, Integer> elementPosition = getElementPosition(elementId);
+    public GridElement getElementAt (final String elementId) {
+        final Pair<Integer, Integer> elementPos = this.getElementPosition(elementId);
+        return (elementPos == null) ? null : getElementAt(elementPos);
+    }
 
-        if (elementPosition == null) return null;
-
-        return this.grid.get(elementPosition.getKey()).get(elementPosition.getValue());
+    /**
+     * Grabs grid element from position.
+     *
+     * @param elementPos The position of the element.
+     * @return The grid element at that position, or null if it didn't exist.
+     */
+    @Nullable
+    public GridElement getElementAt (final Pair<Integer, Integer> elementPos) {
+        return (elementPos.getKey() >= this.rows || elementPos.getValue() >= this.columns) ? null : this.grid.get(elementPos.getKey()).get(elementPos.getValue());
     }
 
     /**
      * Changes an element in the grid from a readable element ID string in the form of A1.
      *
      * @param elementId The ID of the element, for example, A1 for the first one.
-     * @param newValue The new value to put into the element.
+     * @param newElement The new value to put into the element.
      * @return Boolean value of whether or not the operation was successful.
      */
-    public boolean changeElement (final String elementId, final String newValue) {
+    public boolean changeElement (final String elementId, final GridElement newElement) {
         final Pair<Integer, Integer> indexPair = getElementPosition(elementId);
 
         if (indexPair == null) return false;
 
-        this.changeElement(indexPair, newValue);
+        this.changeElement(indexPair, newElement);
         return true;
     }
 
@@ -142,18 +155,26 @@ public class Grid {
      * Changes an element in the grid from its position.
      *
      * @param position The position of the element, with the row index being the key and the column being the value.
-     * @param newValue The new value to set.
+     * @param newElement The new grid element to set.
      */
-    public void changeElement (final Pair<Integer, Integer> position, final String newValue) {
-        this.grid.get(position.getKey()).set(position.getValue(), newValue);
+    public void changeElement (final Pair<Integer, Integer> position, final GridElement newElement) {
+        this.grid.get(position.getKey()).set(position.getValue(), newElement);
     }
 
     private void invalidElement () {
         System.out.println("The element you entered was invalid. Make sure it exists and is in the correct format.");
     }
 
-    public List<List<String>> getGrid() {
+    public List<List<GridElement>> getGrid() {
         return this.grid;
+    }
+
+    public int getRows() {
+        return this.rows;
+    }
+
+    public int getColumns() {
+        return this.columns;
     }
 
 }

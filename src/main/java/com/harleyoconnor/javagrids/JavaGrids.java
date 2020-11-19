@@ -2,6 +2,7 @@ package com.harleyoconnor.javagrids;
 
 import com.harleyoconnor.javagrids.games.GuessingGame;
 import com.harleyoconnor.javagrids.grids.Grid;
+import com.harleyoconnor.javagrids.grids.GridElement;
 import com.harleyoconnor.javautilities.InputUtils;
 
 /**
@@ -20,11 +21,11 @@ public final class JavaGrids {
     }
 
     private void createGrid () {
-        final Grid grid = new Grid(5, 5, "_");
+        final Grid grid = new Grid(5, 5, new GridElement(" _ "));
         grid.printGrid();
 
-        grid.changeElement("A4", "+");
-        grid.changeElement("D1", "]");
+        grid.getElementAt("A4").setDisplayText("+");
+        grid.getElementAt("D1").setDisplayText("]");
 
         grid.printGrid();
     }
