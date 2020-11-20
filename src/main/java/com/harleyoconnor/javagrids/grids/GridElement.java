@@ -16,7 +16,7 @@ public class GridElement implements Cloneable {
     protected String displayText;
 
     /**
-     * Initiates grid element with a display text. Use this for creating default grid elements.
+     * Initiates grid element with a display text. Use this for creating default grid elements, and note that default grid elements cannot take more than one parameter for their constructor.
      *
      * @param displayText The default text to display.
      */
@@ -53,16 +53,6 @@ public class GridElement implements Cloneable {
 
     public void setDisplayText(String displayText) {
         this.displayText = displayText;
-    }
-
-    @Override
-    @Nullable
-    protected GridElement clone() {
-        try {
-            return (GridElement) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
     }
 
 }

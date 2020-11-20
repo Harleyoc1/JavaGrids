@@ -4,6 +4,7 @@ import com.harleyoconnor.javautilities.ArrayUtils;
 import javafx.util.Pair;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,7 +36,21 @@ public class Grid {
             this.grid.add(new ArrayList<>());
 
             for (int j = 0; j < this.columns; j++) {
-                final GridElement gridElement = this.defaultElement.clone();
+                GridElement gridElement = null;
+
+                try {
+                    // Instantiate the grid element with a string.
+
+                    final Constructor<?> elementConstructor = this.defaultElement.getClass().getDeclaredConstructor(this.defaultElement.getDisplayText().getClass());
+                    elementConstructor.setAccessible(true);
+                    gridElement = (GridElement) elementConstructor.newInstance(this.defaultElement.getDisplayText());
+                } catch (Exception e) {
+                    System.err.println("Fatal error creating grid. This has likely arisen from incorrect usage of JavaGrids.");
+                    e.printStackTrace();
+                }
+
+                if (gridElement == null) return;
+
                 gridElement.setGrid(this);
                 gridElement.setPosition(new Pair<>(i, j));
 
@@ -159,6 +174,20 @@ public class Grid {
      */
     public void changeElement (final Pair<Integer, Integer> position, final GridElement newElement) {
         this.grid.get(position.getKey()).set(position.getValue(), newElement);
+    }
+
+    /**
+     * @return All grid elements.
+     */
+    public List<GridElement> getGridElements () {
+        final List<GridElement> gridElements = new ArrayList<>();
+
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++)
+                gridElements.add(this.getElementAt(new Pair<>(i, j)));
+        }
+
+        return gridElements;
     }
 
     private void invalidElement () {
