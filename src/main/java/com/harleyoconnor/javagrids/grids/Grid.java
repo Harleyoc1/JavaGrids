@@ -135,7 +135,7 @@ public class Grid {
     @Nullable
     public GridElement getElementAt (final String elementId) {
         final Pair<Integer, Integer> elementPos = this.getElementPosition(elementId);
-        return (elementPos == null) ? null : getElementAt(elementPos);
+        return (elementPos == null) ? null : this.getElementAt(elementPos);
     }
 
     /**
