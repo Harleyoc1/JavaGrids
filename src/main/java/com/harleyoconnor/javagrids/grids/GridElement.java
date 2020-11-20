@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
  *
  * @author Harley O'Connor
  */
-public final class GridElement implements Cloneable {
+public class GridElement implements Cloneable {
 
     protected Grid grid;
     protected Pair<Integer, Integer> position;
